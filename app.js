@@ -78,7 +78,7 @@ app.get("/player_api.php", async function(req, res){
 		getProfile.username = getServerInfo.url || m_var_Server;
 		//end hack back
 
-		res.type('json').send({"user_info": getProfile}); //, "server_info": getServerInfo
+		res.type('json').send({"user_info": getProfile, "server_info": getServerInfo}); //
 	
 	}else if(m_var_Action === "zzz_get_server_info"){
 		
