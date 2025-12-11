@@ -139,6 +139,10 @@ app.get("/player_api.php", async function(req, res){
 app.get('/{*splat}', function(req, res) {
 
 	console.log("other queries - " + req.url);
+	
+	if(req.url.startsWith("/series/")){
+		res.redirect("http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+	}
 	res.type('html').sendStatus(404);
 
 });
