@@ -17,7 +17,7 @@ app.get("/get.php", function(req, res){
 
 app.get("/player_api.php", function(req, res){
 	
-	console.log(req.query.server);
+	console.log(req.url);
 	var m_var_Server = req.query.server;
 	var m_var_Username = req.query.username;
 	var m_var_Password = req.query.password;
