@@ -55,6 +55,8 @@ app.get("/player_api.php", async function(req, res){
 		return;
 	}
 	
+	if(m_var_Server.startsWith("http") == false) m_var_Server = "http://" + m_var_Server;
+	
 	const xtream = new Xtream({
 	  url: m_var_Server, //'http://cf.business-cdn.me',
 	  username: m_var_Username, //'020a99bbf5',
