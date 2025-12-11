@@ -62,13 +62,14 @@ app.get("/player_api.php", async function(req, res){
 	  preferredFormat: 'm3u8', // optional preferred format for channel URLs
 	});
 
-	if(m_var_Action === undefined || m_var_Action == "" || m_var_Action == "get_profile"){
+	if(m_var_Action === undefined || m_var_Action == "" || m_var_Action == "get_profile" || m_var_Action === "get_server_info"){
 		//var returnVal = {"user_info":{"username":"020a99bbf5","password":"aaa38a3ab0","message":"Welcome to World 8K","auth":1,"status":"Active","exp_date":"1768031057","is_trial":"0","active_cons":"1","created_at":"1765352657","max_connections":"1","allowed_output_formats":["m3u8","ts","rtmp"]},"server_info":{"url":"cf.business-cdn.me","port":"80","https_port":"443","server_protocol":"http","rtmp_port":"25462","timezone":"Europe\/Amsterdam","timestamp_now":1765445611,"time_now":"2025-12-11 10:33:31","process":true}}
 		//res.type('json').send(returnVal);
 		var getProfile = await xtream.getProfile();
-		res.type('json').send(getProfile);
+		var getServerInfo = await xtream.getServerInfo();
+		res.type('json').send({"user_info": getProfile, "server_info": getServerInfo});
 	
-	}else if(m_var_Action === "get_server_info"){
+	}else if(m_var_Action === "zzz_get_server_info"){
 		
 		var getServerInfo = await xtream.getServerInfo();
 		res.type('json').send(getServerInfo);
