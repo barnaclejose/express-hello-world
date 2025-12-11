@@ -48,6 +48,8 @@ app.get("/player_api.php", async function(req, res){
 		m_var_Password = temp_passwordField[1];
 	}
 
+	console.log("postproce", m_var_Server, m_var_Username, m_var_Password, m_var_Action);
+
 	if(m_var_Server === undefined || m_var_Username === undefined || m_var_Password === undefined){
 		res.type('html').sendStatus(400);
 		return;
