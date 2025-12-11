@@ -31,8 +31,8 @@ app.get("/player_api.php", async function(req, res){
 	var originalURL = req.url;
 	
 	var m_var_Server = req.query.server;
-	var m_var_Username = req.query.username;
-	var m_var_Password = req.query.password;
+	var m_var_Username = decodeURI(req.query.username);
+	var m_var_Password = decodeURI(req.query.password);
 	var m_var_Action = req.query.action; //get_profile get_server_info get_live_streams get_channel_categories
 
 	console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
