@@ -116,8 +116,27 @@ app.get("/player_api.php", async function(req, res){
 	}else if(m_var_Action === "get_vod_streams"){
 
 	}else if(m_var_Action === "get_live_categories" || m_var_Action === "get_channel_categories"){
+		var getLiveCategoriesResult = await fncGetLiveCategories(xtream);
+		res.type('json').send(getLiveCategoriesResult.getChannelCategories);
 
 	}else if(m_var_Action === "get_live_streams"){
+		var getLiveCategoriesResult = await fncGetLiveCategories(xtream);
+		var JSON_ChannelCategories = getLiveCategoriesResult.JSON_ChannelCategories;
+
+		var filtered_getChannels = [];
+
+			for(var index in getChannels){
+				var mCategory_ID = getChannels[index].category_id;
+
+				if(JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true){
+					
+				}else{
+					filtered_getChannels.push(getChannels[index]);
+				}
+			}
+		
+		getChannels = null;
+		res.type('json').send(filtered_getChannels);
 
 	}else if(m_var_Action === "get_short_epg"){
 	
@@ -142,9 +161,9 @@ app.get('/{*splat}', function(req, res) {
 	
 	if(req.url.startsWith("/series/")){
 		res.redirect("http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+	}else{
+		res.type('html').sendStatus(404);
 	}
-	res.type('html').sendStatus(404);
-
 });
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
@@ -162,6 +181,64 @@ const html_default_response = `
   </body>
 </html>
 `;
+
+
+async function fncGetLiveCategories(xtream){
+	const getChannelCategories = await xtream.getChannelCategories();
+	var JSON_ChannelCategories = {};
+
+		for(var index in getChannelCategories){
+			getChannelCategories[index]["exclude"] = false;
+
+			var mCategory = getChannelCategories[index].category_name;
+			
+			if(arabicCharacters.test(mCategory)){
+				getChannelCategories[index]["exclude"] = true;
+			}
+			
+			mCategory = mCategory.toLowerCase();
+			console.log(mCategory);
+			
+			
+			var splitCountrycode_Hyphen = mCategory.split(" - ")[0].toUpperCase();
+			if(["AF","AX","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BM","BT","BA","BW","BV","BR","IO","BN","BG","BF","BI","KH","CM","CA","CV","KY","CF","TD","CL","CN","CX","CC","CO","KM","CG","CK","CR","CI","HR","CU","CW","CY","CZ","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","ET","FK","FO","FJ","FI","FR","GF","PF","TF","GA","GM","GE","DE","GH","GI","GR","GL","GD","GP","GU","GT","GG","GN","GW","GY","HT","HM","VA","HN","HK","HU","IS","ID","IR","IQ","IE","IM","IL","IT","JM","JP","JE","JO","KZ","KE","KI","KP","KR","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MO","MK","MG","MW","MY","MV","ML","MT","MH","MQ","MR","MU","YT","MX","FM","MD","MC","MN","ME","MS","MA","MZ","MM","NA","NR","NP","NL","NC","NZ","NI","NE","NG","NU","NF","MP","NO","OM","PK","PW","PS","PA","PG","PY","PE","PH","PN","PL","PT","PR","QA","RE","RO","RU","RW","BL","SH","KN","LC","MF","PM","VC","WS","SM","ST","SA","SN","RS","SC","SL","SG","SX","SK","SI","SB","SO","ZA","GS","SS","ES","LK","SD","SR","SJ","SZ","SE","CH","SY","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","UM","UY","UZ","VU","VE","VN","VG","VI","WF","EH","YE","ZM","ZW"].indexOf(splitCountrycode_Hyphen) > -1){
+				getChannelCategories[index]["exclude"] = true;
+			}
+			if(["AFG","ALA","ALB","DZA","ASM","AND","AGO","AIA","ATA","ATG","ARG","ARM","ABW","AUS","AUT","AZE","BHS","BHR","BGD","BRB","BLR","BEL","BLZ","BEN","BMU","BTN","BOL","BES","BIH","BWA","BVT","BRA","IOT","BRN","BGR","BFA","BDI","CPV","KHM","CMR","CAN","CYM","CAF","TCD","CHL","CHN","CXR","CCK","COL","COM","COG","COD","COK","CRI","CIV","HRV","CUB","CUW","CYP","CZE","DNK","DJI","DMA","DOM","ECU","EGY","SLV","GNQ","ERI","EST","SWZ","ETH","FLK","FRO","FJI","FIN","FRA","GUF","PYF","ATF","GAB","GMB","GEO","DEU","GHA","GIB","GRC","GRL","GRD","GLP","GUM","GTM","GGY","GIN","GNB","GUY","HTI","HMD","VAT","HND","HKG","HUN","ISL","IND","IDN","IRN","IRQ","IRL","IMN","ISR","ITA","JAM","JPN","JEY","JOR","KAZ","KEN","KIR","PRK","KOR","KWT","KGZ","LAO","LVA","LBN","LSO","LBR","LBY","LIE","LTU","LUX","MAC","MDG","MWI","MYS","MDV","MLI","MLT","MHL","MTQ","MRT","MUS","MYT","MEX","FSM","MDA","MCO","MNG","MNE","MSR","MAR","MOZ","MMR","NAM","NRU","NPL","NLD","NCL","NZL","NIC","NER","NGA","NIU","NFK","MKD","MNP","NOR","OMN","PAK","PLW","PSE","PAN","PNG","PRY","PER","PHL","PCN","POL","PRT","PRI","QAT","REU","ROU","RUS","RWA","BLM","SHN","KNA","LCA","MAF","SPM","VCT","WSM","SMR","STP","SAU","SEN","SRB","SYC","SLE","SGP","SXM","SVK","SVN","SLB","SOM","ZAF","SGS","SSD","ESP","LKA","SDN","SUR","SJM","SWE","CHE","SYR","TWN","TJK","TZA","THA","TLS","TGO","TKL","TON","TTO","TUN","TUR","TKM","TCA","TUV","UGA","UKR","ARE","UMI","URY","UZB","VUT","VEN","VNM","VGB","VIR","WLF","ESH"].indexOf(splitCountrycode_Hyphen) > -1){
+				getChannelCategories[index]["exclude"] = true;
+			}
+
+			
+			var splitCountrycode_Pipe = mCategory.split("|")[0].toUpperCase();
+			if(["AF","AX","AL","DZ","AS","AD","AO","AI","AQ","AG","AR","AM","AW","AU","AT","AZ","BS","BH","BD","BB","BY","BE","BZ","BJ","BM","BT","BA","BW","BV","BR","IO","BN","BG","BF","BI","KH","CM","CA","CV","KY","CF","TD","CL","CN","CX","CC","CO","KM","CG","CK","CR","CI","HR","CU","CW","CY","CZ","DK","DJ","DM","DO","EC","EG","SV","GQ","ER","EE","ET","FK","FO","FJ","FI","FR","GF","PF","TF","GA","GM","GE","DE","GH","GI","GR","GL","GD","GP","GU","GT","GG","GN","GW","GY","HT","HM","VA","HN","HK","HU","IS","ID","IR","IQ","IE","IM","IL","IT","JM","JP","JE","JO","KZ","KE","KI","KP","KR","KW","KG","LA","LV","LB","LS","LR","LY","LI","LT","LU","MO","MK","MG","MW","MY","MV","ML","MT","MH","MQ","MR","MU","YT","MX","FM","MD","MC","MN","ME","MS","MA","MZ","MM","NA","NR","NP","NL","NC","NZ","NI","NE","NG","NU","NF","MP","NO","OM","PK","PW","PS","PA","PG","PY","PE","PH","PN","PL","PT","PR","QA","RE","RO","RU","RW","BL","SH","KN","LC","MF","PM","VC","WS","SM","ST","SA","SN","RS","SC","SL","SG","SX","SK","SI","SB","SO","ZA","GS","SS","ES","LK","SD","SR","SJ","SZ","SE","CH","SY","TW","TJ","TZ","TH","TL","TG","TK","TO","TT","TN","TR","TM","TC","TV","UG","UA","AE","UM","UY","UZ","VU","VE","VN","VG","VI","WF","EH","YE","ZM","ZW"].indexOf(splitCountrycode_Pipe) > -1){
+				getChannelCategories[index]["exclude"] = true;
+			}
+			if(["AFG","ALA","ALB","DZA","ASM","AND","AGO","AIA","ATA","ATG","ARG","ARM","ABW","AUS","AUT","AZE","BHS","BHR","BGD","BRB","BLR","BEL","BLZ","BEN","BMU","BTN","BOL","BES","BIH","BWA","BVT","BRA","IOT","BRN","BGR","BFA","BDI","CPV","KHM","CMR","CAN","CYM","CAF","TCD","CHL","CHN","CXR","CCK","COL","COM","COG","COD","COK","CRI","CIV","HRV","CUB","CUW","CYP","CZE","DNK","DJI","DMA","DOM","ECU","EGY","SLV","GNQ","ERI","EST","SWZ","ETH","FLK","FRO","FJI","FIN","FRA","GUF","PYF","ATF","GAB","GMB","GEO","DEU","GHA","GIB","GRC","GRL","GRD","GLP","GUM","GTM","GGY","GIN","GNB","GUY","HTI","HMD","VAT","HND","HKG","HUN","ISL","IND","IDN","IRN","IRQ","IRL","IMN","ISR","ITA","JAM","JPN","JEY","JOR","KAZ","KEN","KIR","PRK","KOR","KWT","KGZ","LAO","LVA","LBN","LSO","LBR","LBY","LIE","LTU","LUX","MAC","MDG","MWI","MYS","MDV","MLI","MLT","MHL","MTQ","MRT","MUS","MYT","MEX","FSM","MDA","MCO","MNG","MNE","MSR","MAR","MOZ","MMR","NAM","NRU","NPL","NLD","NCL","NZL","NIC","NER","NGA","NIU","NFK","MKD","MNP","NOR","OMN","PAK","PLW","PSE","PAN","PNG","PRY","PER","PHL","PCN","POL","PRT","PRI","QAT","REU","ROU","RUS","RWA","BLM","SHN","KNA","LCA","MAF","SPM","VCT","WSM","SMR","STP","SAU","SEN","SRB","SYC","SLE","SGP","SXM","SVK","SVN","SLB","SOM","ZAF","SGS","SSD","ESP","LKA","SDN","SUR","SJM","SWE","CHE","SYR","TWN","TJK","TZA","THA","TLS","TGO","TKL","TON","TTO","TUN","TUR","TKM","TCA","TUV","UGA","UKR","ARE","UMI","URY","UZB","VUT","VEN","VNM","VGB","VIR","WLF","ESH"].indexOf(splitCountrycode_Pipe) > -1){
+				getChannelCategories[index]["exclude"] = true;
+			}
+
+
+			if(["pakistan", "china", "bangla", "telugu", "gujarat", "kannada", "sinahlese", "punjab", "malayalam", "chinese", "japanese", "spanish", "french", "german", "canada", "france", "germany", "japan", "spain", "africa", "italy", "greek", "greece", "arab", "turk", "malta", "québec", "albania", "dutch", "netherland", "belgium", "austria", "swiss", "españa", "latin", "persia", "kurd", "hebrew", "russia", "bulgari", "hungary", "philippines", "nordic", "svensk", "dansk", "polish", "poland", "polska"].some(searchString => mCategory.includes(searchString))){
+				getChannelCategories[index]["exclude"] = true;
+			}
+
+			if(["viaplay", "discovery", "videoland", "pt/br", "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
+				getChannelCategories[index]["exclude"] = true;
+			}
+
+			
+			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
+				getChannelCategories[index]["exclude"] = false;
+			}
+
+			JSON_ChannelCategories[getChannelCategories[index]["category_id"]] = getChannelCategories[index];
+
+		}
+		
+		return {JSON_ChannelCategories: JSON_ChannelCategories, getChannelCategories: getChannelCategories};
+
+}
+
 
 
 async function fncGetSeriesCategories(xtream){
