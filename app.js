@@ -162,6 +162,10 @@ app.get('/{*splat}', function(req, res) {
 	
 	if(req.url.startsWith("/series/")){
 		res.redirect("http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+	else if(req.url.startsWith("/live/")){
+		res.redirect("http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+	else if(req.url.startsWith("/movies/")){
+		res.redirect("http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	}else{
 		res.type('html').sendStatus(404);
 	}
