@@ -67,6 +67,11 @@ app.get("/player_api.php", async function(req, res){
 		//res.type('json').send(returnVal);
 		var getProfile = await xtream.getProfile();
 		var getServerInfo = await xtream.getServerInfo();
+		//hack back
+		getProfile.password = getProfile.username + ":" + getProfile.password;
+		getProfile.username = getServerInfo.url || m_var_Server;
+		//end hack back
+
 		res.type('json').send({"user_info": getProfile, "server_info": getServerInfo});
 	
 	}else if(m_var_Action === "zzz_get_server_info"){
