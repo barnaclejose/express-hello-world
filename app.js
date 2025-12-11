@@ -28,13 +28,17 @@ app.get("/xmltv.php", function(req, res){
 app.get("/player_api.php", async function(req, res){
 	
 	console.log(req.url);
-	var m_var_Server = req.query.server;	
+	var originalURL = req.url;
+	
+	var m_var_Server = req.query.server;
 	var m_var_Username = req.query.username;
 	var m_var_Password = req.query.password;
 	var m_var_Action = req.query.action; //get_profile get_server_info get_live_streams get_channel_categories
 
 	console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
 
+	originalURL = originalURL.replace(m_var_Username, "ZZZUSERNAMEZZZ").replace(m_var_Password, "ZZZPASSWORDZZZ");
+	
 	if(m_var_Username === undefined || m_var_Password === undefined){
 		res.type('html').sendStatus(400);
 		return;
@@ -99,6 +103,7 @@ app.get("/player_api.php", async function(req, res){
 				if(JSON_ShowCategories[mCategory_ID] !== undefined && JSON_ShowCategories[mCategory_ID].exclude == true){
 					
 				}else{
+					/// bad --- if(getShows[index].url === undefined) getShows[index].url = m_var_Server + "/series/020a99bbf5/aaa38a3ab0/" + getShows[index].series_id + ".mp4"
 					filtered_getShows.push(getShows[index]);
 				}
 			}
@@ -117,8 +122,10 @@ app.get("/player_api.php", async function(req, res){
 	}else if(m_var_Action === "get_short_epg"){
 	
 	}else{
-		//res.type('json').send("[{'a': 1}, {'a': 2}]");
-		res.type('html').sendStatus(404);
+
+		originalURL = originalURL.replace("ZZZUSERNAMEZZZ", m_var_Username).replace("ZZZPASSWORDZZZ", m_var_Password);
+		const response = await fetch(m_var_Server + originalURL);
+		res.type('html').send(await response.text());
 	}
 	
 	
@@ -167,7 +174,6 @@ async function fncGetSeriesCategories(xtream){
 			}
 			
 			mCategory = mCategory.toLowerCase();
-			console.log(mCategory);
 			
 			
 			var splitCountrycode_Hyphen = mCategory.split(" - ")[0].toUpperCase();
@@ -188,17 +194,24 @@ async function fncGetSeriesCategories(xtream){
 			}
 
 
-			if(["pakistan", "china", "bangla", "telugu", "gujarat", "kannada", "sinahlese", "punjab", "malayalam", "chinese", "japanese", "spanish", "french", "german", "canada", "france", "germany", "japan", "spain", "africa", "italy", "greek", "greece", "arab", "turk", "malta", "québec", "albania", "dutch", "netherland", "belgium", "austria", "swiss", "españa", "latin", "persia", "kurd", "hebrew", "russia", "bulgari", "hungary", "philippines", "nordic", "svensk", "dansk"].some(searchString => mCategory.includes(searchString))){
+			if(["pakistan", "china", "bangla", "telugu", "gujarat", "kannada", "sinahlese", "punjab", "malayalam", "chinese", "japanese", "spanish", "french", "german", "canada", "france", "germany", "japan", "spain", "africa", "italy", "greek", "greece", "arab", "turk", "malta", "québec", "albania", "dutch", "netherland", "belgium", "austria", "swiss", "españa", "latin", "persia", "kurd", "hebrew", "russia", "bulgari", "hungary", "philippines", "nordic", "svensk", "dansk", "polish", "poland", "polska"].some(searchString => mCategory.includes(searchString))){
 				getShowCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "discovery", "videoland", "pt/br", "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "discovery", "videoland", "pt/br", "norsk", "suomi", "íslands", "russain"].some(searchString => mCategory.includes(searchString))){
 				getShowCategories[index]["exclude"] = true;
 			}
 
 			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
 				getShowCategories[index]["exclude"] = false;
 			}
+			
+			//final category override over preffered channels
+			if(["turkish"].some(searchString => mCategory.includes(searchString))){
+				getShowCategories[index]["exclude"] = true;
+			}
+
+			
 
 			JSON_ShowCategories[getShowCategories[index]["category_id"]] = getShowCategories[index];
 		}
