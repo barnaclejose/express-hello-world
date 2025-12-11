@@ -113,7 +113,7 @@ app.get("/player_api.php", async function(req, res){
 
 	}else if(m_var_Action === "get_vod_categories" || m_var_Action === "get_movie_categories"){
 		var getVODCategoriesResult = await fncGetVODCategories(xtream);
-		res.type('json').send(getVODCategoriesResult.getVODCategories);
+		res.type('json').send(getVODCategoriesResult.JSON_MovieCategories);
 
 	}else if(m_var_Action === "get_vod_streams"){
 		var getVODCategoriesResult = await fncGetVODCategories(xtream);
