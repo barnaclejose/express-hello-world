@@ -81,12 +81,12 @@ app.get("/player_api.php", async function(req, res){
 	
 	}else if(m_var_Action === "get_series_categories" || m_var_Action === "get_show_categories"){
 		
-		var fncGetSeriesCategories = await fncGetSeriesCategories(xtream);
-		res.type('json').send(fncGetSeriesCategories.getShowCategories);
+		var getSeriesCategoriesResult = await fncGetSeriesCategories(xtream);
+		res.type('json').send(getSeriesCategoriesResult.getShowCategories);
 		
 	}else if(m_var_Action === "get_series"){
-		var fncGetSeriesCategories = await fncGetSeriesCategories(xtream);
-		var JSON_ShowCategories = fncGetSeriesCategories.JSON_ShowCategories;
+		var getSeriesCategoriesResult = await fncGetSeriesCategories(xtream);
+		var JSON_ShowCategories = getSeriesCategoriesResult.JSON_ShowCategories;
 		
 		var getShows = await xtream.getShows();
 		var filtered_getShows = [];
