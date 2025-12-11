@@ -123,6 +123,7 @@ app.get("/player_api.php", async function(req, res){
 		var getLiveCategoriesResult = await fncGetLiveCategories(xtream);
 		var JSON_ChannelCategories = getLiveCategoriesResult.JSON_ChannelCategories;
 
+		var getChannels = await xtream.getChannels();
 		var filtered_getChannels = [];
 
 			for(var index in getChannels){
@@ -197,7 +198,7 @@ async function fncGetLiveCategories(xtream){
 			}
 			
 			mCategory = mCategory.toLowerCase();
-			console.log(mCategory);
+			//console.log(mCategory);
 			
 			
 			var splitCountrycode_Hyphen = mCategory.split(" - ")[0].toUpperCase();
