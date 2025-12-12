@@ -6,7 +6,7 @@ const port = process.env.PORT || 3001;
 const arabicCharacters = /[\u0600-\u06FF]/;
 
 const gApiKeys = {
-	"IPS" : {server: "http://cf.business-cdn.me", username: "020a99bbf5", password: "aaa38a3ab0"},
+	"020a99bbf5" : {server: "http://cf.business-cdn.me", username: "020a99bbf5", password: "aaa38a3ab0"},
 };
 		
 
@@ -47,6 +47,8 @@ app.get("/player_api.php", async function(req, res){
 
 	console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
 
+	
+	/*
 	originalURL = originalURL.replace(m_var_Username, "ZZZUSERNAMEZZZ").replace(m_var_Password, "ZZZPASSWORDZZZ");
 	
 	if(m_var_Username === undefined || m_var_Password === undefined){
@@ -71,6 +73,10 @@ app.get("/player_api.php", async function(req, res){
 	
 	if(m_var_Server.startsWith("http") == false) m_var_Server = "http://" + m_var_Server;
 	
+	*/
+	m_var_Server = gApiKeys[m_var_Username].server;
+	
+	
 	const xtream = new Xtream({
 	  url: m_var_Server, //'http://cf.business-cdn.me',
 	  username: m_var_Username, //'020a99bbf5',
@@ -86,8 +92,8 @@ app.get("/player_api.php", async function(req, res){
 		var getServerInfo = await xtream.getServerInfo();
 		//getServerInfo.url = "https://express-hello-world-ybg3.onrender.com";
 		//hack back
-		getProfile.password = getProfile.username + ":" + getProfile.password;
-		getProfile.username = getServerInfo.url || m_var_Server;
+		//getProfile.password = getProfile.username + ":" + getProfile.password;
+		//getProfile.username = getServerInfo.url || m_var_Server;
 		//end hack back
 
 		res.type('json').send({"user_info": getProfile, "server_info": getServerInfo}); //
