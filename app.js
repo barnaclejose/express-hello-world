@@ -21,7 +21,7 @@ app.get("/", (req, res) => res.type('html').send(html_default_response));
 
 //heartbeat
 app.get("/pulse", async function(req, res){
-	var response = await fetch("https://api.restful-api.dev/objects/7");
+	var response = await fetch("https://cf.business-cdn.me/player_api.php?username=020a99bbf5&password=aaa38a3ab0");
 	res.type('html').send(await response.json());
 
 });
