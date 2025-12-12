@@ -88,7 +88,7 @@ app.get("/player_api.php", async function(req, res){
 	}else if(m_var_Action === "get_series_categories" || m_var_Action === "get_show_categories"){
 		
 		var getSeriesCategoriesResult = await fncGetSeriesCategories(xtream);
-		res.type('json').send(getSeriesCategoriesResult.JSON_ShowCategories);
+		res.type('json').send(getSeriesCategoriesResult.getShowCategories);
 		
 	}else if(m_var_Action === "get_series"){
 		var getSeriesCategoriesResult = await fncGetSeriesCategories(xtream);
@@ -113,7 +113,7 @@ app.get("/player_api.php", async function(req, res){
 
 	}else if(m_var_Action === "get_vod_categories" || m_var_Action === "get_movie_categories"){
 		var getVODCategoriesResult = await fncGetVODCategories(xtream);
-		res.type('json').send(getVODCategoriesResult.JSON_MovieCategories);
+		res.type('json').send(getVODCategoriesResult.getMovieCategories);
 
 	}else if(m_var_Action === "get_vod_streams"){
 		var getVODCategoriesResult = await fncGetVODCategories(xtream);
