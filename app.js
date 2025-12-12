@@ -88,7 +88,7 @@ app.get("/player_api.php", async function(req, res){
 	}else if(m_var_Action === "get_series_categories" || m_var_Action === "get_show_categories"){
 		
 		var getSeriesCategoriesResult = await fncGetSeriesCategories(xtream);
-		res.type('json').send(getSeriesCategoriesResult.getShowCategories);
+		res.type('json').send(getSeriesCategoriesResult.JSON_ShowCategories);
 		
 	}else if(m_var_Action === "get_series"){
 		var getSeriesCategoriesResult = await fncGetSeriesCategories(xtream);
