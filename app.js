@@ -116,10 +116,10 @@ app.get("/player_api.php", async function(req, res){
 			for(var index in getMovies){
 				var mCategory_ID = getMovies[index].category_id;
 				var mCategory_Name = JSON_MovieCategories[mCategory_ID].category_name.toLowerCase();
-				var mMovieName = getMovies[index].name;
-				var mMovieIsAdult = getMovies[index].name;
+				var mVODName = getMovies[index].name;
+				var mVODIsAdult = getMovies[index].getChannels;
 
-				if((JSON_MovieCategories[mCategory_ID] !== undefined && JSON_MovieCategories[mCategory_ID].exclude == true) || (mMovieIsAdult == 1 || mMovieIsAdult == true || mMovieIsAdult == "true")){
+				if((JSON_MovieCategories[mCategory_ID] !== undefined && JSON_MovieCategories[mCategory_ID].exclude == true) || (mVODIsAdult == 1 || mVODIsAdult == true || mVODIsAdult == "true")){
 					
 				}else{
 
@@ -143,32 +143,31 @@ app.get("/player_api.php", async function(req, res){
 
 			for(var index in getChannels){
 				var mCategory_ID = getChannels[index].category_id;
-				var mCategory_ID = getMovies[index].category_id;
 				var mCategory_Name = JSON_ChannelCategories[mCategory_ID].category_name.toLowerCase();
-				var mMovieName = getMovies[index].name;
-				var mMovieIsAdult = getMovies[index].name;
+				var mChannelName = getChannels[index].name;
+				var mChannelIsAdult = getChannels[index].is_adult;
 
-				if((JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true) || (mMovieIsAdult == 1 || mMovieIsAdult == true || mMovieIsAdult == "true")){
+				if((JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true) || (mChannelIsAdult == 1 || mChannelIsAdult == true || mChannelIsAdult == "true")){
 					
 				}else{
 
-					getMovies[index].category_id = 99;
+					getChannels[index]["category_id"] = 99;
 					
 
 					if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) && ["tamil", "hindi", "tamil", "in|", "in - ","inr - ", "inr| "].some(searchString => mCategory_Name.includes(searchString))){
-						getMovieCategories[index]["category_id"] = 21;
+						getChannels[index]["category_id"] = 21;
 					}
 
 					if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) && ["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString))){
-						getMovieCategories[index]["category_id"] = 25;
+						getChannels[index]["category_id"] = 25;
 					}
 
 					if(["tamil"].some(searchString => mCategory_Name.includes(searchString)) && ["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString))){
-						getMovieCategories[index]["category_id"] = 13;
+						getChannels[index]["category_id"] = 13;
 					}
 
 					if(["nfl"].some(searchString => mCategory_Name.includes(searchString)) && ["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString))){
-						getMovieCategories[index]["category_id"] = 42;
+						getChannels[index]["category_id"] = 42;
 					}
 
 					/*
