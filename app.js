@@ -35,7 +35,8 @@ app.get("/xmltv.php", function(req, res){
 
 app.get("/player_api.php", async function(req, res){
 	
-	console.log(res.locals.ua);
+	console.log(res.locals.ua, req.headers['user-agent']);
+	var mUserAgent = res.locals.ua || req.headers['user-agent'];
 	
 	console.log(req.url);
 	var originalURL = req.url;
@@ -74,7 +75,7 @@ app.get("/player_api.php", async function(req, res){
 	if(m_var_Server.startsWith("http") == false) m_var_Server = "http://" + m_var_Server;
 	
 	*/
-	m_var_Server = gApiKeys[m_var_Username].server;
+	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
 	
 	
 	const xtream = new Xtream({
@@ -235,6 +236,7 @@ const html_default_response = `
 async function fncGetVODCategories(xtream){
 	const getMovieCategories = await xtream.getMovieCategories();
 	var JSON_MovieCategories = {};
+	
 
 		for(var index in getMovieCategories){
 			getMovieCategories[index]["exclude"] = false;
@@ -280,9 +282,18 @@ async function fncGetVODCategories(xtream){
 				getMovieCategories[index]["exclude"] = false;
 			}
 
+			if(["kid"].some(searchString => mCategory.includes(searchString))){
+				getMovieCategories[index]["parent_id"] = 11;
+			}
+
 			JSON_MovieCategories[getMovieCategories[index]["category_id"]] = getMovieCategories[index];
 
 		}
+		
+		getMovieCategories.unshift({"category_id":"11","category_name":"Master Kids","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"12","category_name":"Master Tamil","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"13","category_name":"Master Hindi","parent_id":0,"exclude":false});
+
 		
 		return {JSON_MovieCategories: JSON_MovieCategories, getMovieCategories: getMovieCategories};
 
