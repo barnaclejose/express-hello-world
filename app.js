@@ -27,15 +27,21 @@ app.get("/get.php", function(req, res){
 
 //EPG
 app.get("/xmltv.php", function(req, res){
-		
-	res.type('html').sendStatus(404);
+	var mUserAgent = res.locals.ua || req.headers['user-agent'];
+	var m_var_Server = req.query.server;
+	var m_var_Username = decodeURI(req.query.username);
+	var m_var_Password = decodeURI(req.query.password);
+
+	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
+
+	res.redirect(307, m_var_Server + req.url);
 
 });
 
 
 app.get("/player_api.php", async function(req, res){
 	
-	console.log(res.locals.ua, req.headers['user-agent']);
+	//console.log(res.locals.ua, req.headers['user-agent']);
 	var mUserAgent = res.locals.ua || req.headers['user-agent'];
 	
 	console.log(req.url);
@@ -46,35 +52,9 @@ app.get("/player_api.php", async function(req, res){
 	var m_var_Password = decodeURI(req.query.password);
 	var m_var_Action = req.query.action; //get_profile get_server_info get_live_streams get_channel_categories
 
-	console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
+	//console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
 
 	
-	/*
-	originalURL = originalURL.replace(m_var_Username, "ZZZUSERNAMEZZZ").replace(m_var_Password, "ZZZPASSWORDZZZ");
-	
-	if(m_var_Username === undefined || m_var_Password === undefined){
-		res.type('html').sendStatus(400);
-		return;
-	}
-
-	if(m_var_Server === undefined){
-		m_var_Server = m_var_Username;
-
-		var temp_passwordField = m_var_Password.split(":");
-		m_var_Username = temp_passwordField[0];
-		m_var_Password = temp_passwordField[1];
-	}
-
-	console.log("postproce", m_var_Server, m_var_Username, m_var_Password, m_var_Action);
-
-	if(m_var_Server === undefined || m_var_Username === undefined || m_var_Password === undefined){
-		res.type('html').sendStatus(400);
-		return;
-	}
-	
-	if(m_var_Server.startsWith("http") == false) m_var_Server = "http://" + m_var_Server;
-	
-	*/
 	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
 	
 	
@@ -122,7 +102,6 @@ app.get("/player_api.php", async function(req, res){
 				if(JSON_ShowCategories[mCategory_ID] !== undefined && JSON_ShowCategories[mCategory_ID].exclude == true){
 					
 				}else{
-					/// bad --- if(getShows[index].url === undefined) getShows[index].url = m_var_Server + "/series/020a99bbf5/aaa38a3ab0/" + getShows[index].series_id + ".mp4"
 					filtered_getShows.push(getShows[index]);
 				}
 			}
@@ -178,13 +157,13 @@ app.get("/player_api.php", async function(req, res){
 		getChannels = null;
 		res.type('json').send(filtered_getChannels);
 
-	}else if(m_var_Action === "get_short_epg"){
+	//}else if(m_var_Action === "get_short_epg"){
 	
 	}else{
 
-		originalURL = originalURL.replace("ZZZUSERNAMEZZZ", m_var_Username).replace("ZZZPASSWORDZZZ", m_var_Password);
-		const response = await fetch(m_var_Server + originalURL);
+		const response = await fetch(m_var_Server + req.url);
 		res.type('html').send(await response.text());
+		
 	}
 	
 	
@@ -197,22 +176,32 @@ app.get("/player_api.php", async function(req, res){
 
 app.get('/{*splat}', function(req, res) {
 
-	console.log("other queries - " + req.url);
-	
+	//console.log("other queries - " + req.url);
+	var mUserAgent = res.locals.ua || req.headers['user-agent'];
+	var m_var_Server = req.query.server;
+	var m_var_Username = decodeURI(req.query.username);
+	var m_var_Password = decodeURI(req.query.password);
+
+	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
+
+	res.redirect(308, m_var_Server + req.url);
+
+	/*
 	if(req.url.startsWith("/series/")){
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	} else if(req.url.startsWith("/live/")){
-		console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+		//console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	} else if(req.url.startsWith("/movie/")){
-		console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+		//console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	} else if(req.url.startsWith("/movies/")){
-		console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
+		//console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	}else{
 		res.type('html').sendStatus(404);
 	}
+	*/
 });
 
 const server = app.listen(port, () => console.log(`Example app listening on port ${port}!`));
@@ -278,21 +267,38 @@ async function fncGetVODCategories(xtream){
 			}
 
 			
-			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
+			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "in|", "in - ", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
 				getMovieCategories[index]["exclude"] = false;
-			}
-
-			if(["kid"].some(searchString => mCategory.includes(searchString))){
-				getMovieCategories[index]["parent_id"] = 11;
 			}
 
 			JSON_MovieCategories[getMovieCategories[index]["category_id"]] = getMovieCategories[index];
 
 		}
 		
-		getMovieCategories.unshift({"category_id":"11","category_name":"Master Kids","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"12","category_name":"Master Tamil","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"13","category_name":"Master Hindi","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"13","category_name":"IN| Tamil > Live","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"14","category_name":"IN| Tamil > News","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"15","category_name":"IN| Tamil > Movies 24/7","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"16","category_name":"IN| Tamil > Music","parent_id":0,"exclude":false});
+
+		getMovieCategories.unshift({"category_id":"21","category_name":"IN| Kids > Movies","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"22","category_name":"IN| Kids > Series","parent_id":0,"exclude":false});
+
+		getMovieCategories.unshift({"category_id":"31","category_name":"IN| Hindi > Live","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"32","category_name":"IN| Hindi > News","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"33","category_name":"IN| Hindi > Movies 24/7","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"34","category_name":"IN| Hindi > Music","parent_id":0,"exclude":false});
+
+		getMovieCategories.unshift({"category_id":"41","category_name":"US| Sports > Cricket","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"42","category_name":"US| Sports > NFL","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"43","category_name":"US| Sports > NBA","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"44","category_name":"US| Sports > MLB","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"45","category_name":"US| Sports > Soccer","parent_id":0,"exclude":false});
+
+		getMovieCategories.unshift({"category_id":"51","category_name":"US| News","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"52","category_name":"US| Movies","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"53","category_name":"US| Broadcast","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"54","category_name":"US| Live TV","parent_id":0,"exclude":false});
+		getMovieCategories.unshift({"category_id":"55","category_name":"ZZ| Other","parent_id":0,"exclude":false});
 
 		
 		return {JSON_MovieCategories: JSON_MovieCategories, getMovieCategories: getMovieCategories};
@@ -344,7 +350,7 @@ async function fncGetLiveCategories(xtream){
 			}
 
 			
-			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
+			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "in|", "in - ", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
 				getChannelCategories[index]["exclude"] = false;
 			}
 
@@ -400,7 +406,7 @@ async function fncGetSeriesCategories(xtream){
 				getShowCategories[index]["exclude"] = true;
 			}
 
-			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
+			if(["india", "indian", "bollywood", "hollywood", "hindi", "tamil", "in|", "in - ", "inr - ", "inr| ", "en - ", "en| ", "english"].some(searchString => mCategory.includes(searchString))){
 				getShowCategories[index]["exclude"] = false;
 			}
 			
