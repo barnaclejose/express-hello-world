@@ -256,7 +256,6 @@ app.get("/player_api.php", async function(req, res){
 
 					*/
 					
-					category_ids
 					getChannels[index]["category_ids"] = [getChannels[index]["category_id"] + ""];
 					filtered_getChannels.push(getChannels[index]);
 				}
