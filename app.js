@@ -183,6 +183,7 @@ app.get('/{*splat}', function(req, res) {
 	if(req.url.startsWith("/series/")){
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	} else if(req.url.startsWith("/live/")){
+		console.log("redirecting to " + "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
 	} else if(req.url.startsWith("/movies/")){
 		res.redirect(308, "http://cf.business-cdn.me" + req.url.replace("cf.business-cdn.me/", "").replace(":", "/"));
@@ -248,7 +249,7 @@ async function fncGetVODCategories(xtream){
 				getMovieCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "discovery", "videoland", "pt/br", "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
 				getMovieCategories[index]["exclude"] = true;
 			}
 
@@ -305,7 +306,7 @@ async function fncGetLiveCategories(xtream){
 				getChannelCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "discovery", "videoland", "pt/br", "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
 				getChannelCategories[index]["exclude"] = true;
 			}
 
@@ -362,7 +363,7 @@ async function fncGetSeriesCategories(xtream){
 				getShowCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "discovery", "videoland", "pt/br", "norsk", "suomi", "íslands", "russain"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands", "russain"].some(searchString => mCategory.includes(searchString))){
 				getShowCategories[index]["exclude"] = true;
 			}
 
