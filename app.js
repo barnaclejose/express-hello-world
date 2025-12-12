@@ -52,7 +52,6 @@ app.get("/player_api.php", async function(req, res){
 	var m_var_Password = decodeURI(req.query.password);
 	var m_var_Action = req.query.action; //get_profile get_server_info get_live_streams get_channel_categories
 
-	//console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
 
 	
 	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
@@ -64,6 +63,8 @@ app.get("/player_api.php", async function(req, res){
 	  password: m_var_Password, //'aaa38a3ab0',
 	  preferredFormat: 'm3u8', // optional preferred format for channel URLs
 	});
+
+		console.log(m_var_Server, m_var_Username, m_var_Password, m_var_Action);
 
 	if(m_var_Action === undefined || m_var_Action == "" || m_var_Action == "get_profile" || m_var_Action === "get_server_info"){
 		
@@ -254,6 +255,9 @@ app.get("/player_api.php", async function(req, res){
 					getChannelCategories.unshift({"category_id":"99","category_name":"ZZ| Other","parent_id":0,"exclude":false, "master_category": true});
 
 					*/
+					
+					category_ids
+					getChannels[index]["category_ids"] = [getChannels[index]["category_id"] + ""];
 					filtered_getChannels.push(getChannels[index]);
 				}
 			}
