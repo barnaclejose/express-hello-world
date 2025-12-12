@@ -18,6 +18,14 @@ app.use(function(req, res, next) {
 
 app.get("/", (req, res) => res.type('html').send(html_default_response));
 
+
+//heartbeat
+app.get("/pulse", async function(req, res){
+	var response = await fetch("https://api.restful-api.dev/objects/7");
+	res.type('html').send(await response.json());
+
+});
+
 //m3u
 app.get("/get.php", function(req, res){
 		
