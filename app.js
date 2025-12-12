@@ -284,12 +284,13 @@ app.get("/player_api.php", async function(req, res){
 
 app.get('/{*splat}', function(req, res) {
 
-	//console.log("other queries - " + req.url);
+	console.log("other queries - " + req.url);
 	var mUserAgent = res.locals.ua || req.headers['user-agent'];
 	var m_var_Server = req.query.server;
 	var m_var_Username = decodeURI(req.query.username);
 	var m_var_Password = decodeURI(req.query.password);
 
+	console.log(m_var_Server, m_var_Username, m_var_Password, "redirect info");
 	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
 
 	res.redirect(308, m_var_Server + req.url);
