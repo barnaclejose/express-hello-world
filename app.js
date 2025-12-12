@@ -74,7 +74,7 @@ app.get("/player_api.php", async function(req, res){
 		
 		var getProfile = await xtream.getProfile();
 		var getServerInfo = await xtream.getServerInfo();
-		getServerInfo.url = "https://express-hello-world-ybg3.onrender.com";
+		//getServerInfo.url = "https://express-hello-world-ybg3.onrender.com";
 		//hack back
 		getProfile.password = getProfile.username + ":" + getProfile.password;
 		getProfile.username = getServerInfo.url || m_var_Server;
