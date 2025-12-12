@@ -5,8 +5,16 @@ const app = express();
 const port = process.env.PORT || 3001;
 const arabicCharacters = /[\u0600-\u06FF]/;
 
-
+const gApiKeys = {
+	"IPS" : {server: "http://cf.business-cdn.me", username: "020a99bbf5", password: "aaa38a3ab0"},
+};
 		
+
+app.use(function(req, res, next) {
+	res.locals.ua = req.get('User-Agent');
+	next();
+});
+
 
 app.get("/", (req, res) => res.type('html').send(html_default_response));
 
@@ -26,6 +34,8 @@ app.get("/xmltv.php", function(req, res){
 
 
 app.get("/player_api.php", async function(req, res){
+	
+	console.log(res.locals.ua);
 	
 	console.log(req.url);
 	var originalURL = req.url;
