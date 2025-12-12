@@ -29,8 +29,8 @@ app.get("/get.php", function(req, res){
 app.get("/xmltv.php", function(req, res){
 	var mUserAgent = res.locals.ua || req.headers['user-agent'];
 	var m_var_Server = req.query.server;
-	var m_var_Username = decodeURI(req.query.username);
-	var m_var_Password = decodeURI(req.query.password);
+	var m_var_Username = req.url.split("/")[2];
+	var m_var_Password = req.url.split("/")[3];
 
 	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
 
@@ -286,8 +286,8 @@ app.get('/{*splat}', function(req, res) {
 	console.log("other queries - " + req.url);
 	var mUserAgent = res.locals.ua || req.headers['user-agent'];
 	var m_var_Server = req.query.server;
-	var m_var_Username = decodeURI(req.query.username);
-	var m_var_Password = decodeURI(req.query.password);
+	var m_var_Username = req.url.split("/")[2];
+	var m_var_Password = req.url.split("/")[3];
 
 	console.log(m_var_Server, m_var_Username, m_var_Password, "redirect info");
 	m_var_Server = (gApiKeys[mUserAgent] !== undefined) ? gApiKeys[mUserAgent].server : gApiKeys[m_var_Username].server;
