@@ -66,16 +66,9 @@ app.get("/player_api.php", async function(req, res){
 	});
 
 	if(m_var_Action === undefined || m_var_Action == "" || m_var_Action == "get_profile" || m_var_Action === "get_server_info"){
-		//var returnVal = {"user_info":{"username":"020a99bbf5","password":"aaa38a3ab0","message":"Welcome to World 8K","auth":1,"status":"Active","exp_date":"1768031057","is_trial":"0","active_cons":"1","created_at":"1765352657","max_connections":"1","allowed_output_formats":["m3u8","ts","rtmp"]},"server_info":{"url":"cf.business-cdn.me","port":"80","https_port":"443","server_protocol":"http","rtmp_port":"25462","timezone":"Europe\/Amsterdam","timestamp_now":1765445611,"time_now":"2025-12-11 10:33:31","process":true}}
-		//res.type('json').send(returnVal);
 		
 		var getProfile = await xtream.getProfile();
 		var getServerInfo = await xtream.getServerInfo();
-		//getServerInfo.url = "https://express-hello-world-ybg3.onrender.com";
-		//hack back
-		//getProfile.password = getProfile.username + ":" + getProfile.password;
-		//getProfile.username = getServerInfo.url || m_var_Server;
-		//end hack back
 
 		res.type('json').send({"user_info": getProfile, "server_info": getServerInfo}); //
 	
@@ -122,10 +115,14 @@ app.get("/player_api.php", async function(req, res){
 
 			for(var index in getMovies){
 				var mCategory_ID = getMovies[index].category_id;
+				var mCategory_Name = JSON_MovieCategories[mCategory_ID].category_name.toLowerCase();
+				var mMovieName = getMovies[index].name;
+				var mMovieIsAdult = getMovies[index].name;
 
-				if(JSON_MovieCategories[mCategory_ID] !== undefined && JSON_MovieCategories[mCategory_ID].exclude == true){
+				if((JSON_MovieCategories[mCategory_ID] !== undefined && JSON_MovieCategories[mCategory_ID].exclude == true) || (mMovieIsAdult == 1 || mMovieIsAdult == true || mMovieIsAdult == "true")){
 					
 				}else{
+
 					filtered_getMovies.push(getMovies[index]);
 				}
 			}
@@ -146,10 +143,64 @@ app.get("/player_api.php", async function(req, res){
 
 			for(var index in getChannels){
 				var mCategory_ID = getChannels[index].category_id;
+				var mCategory_ID = getMovies[index].category_id;
+				var mCategory_Name = JSON_ChannelCategories[mCategory_ID].category_name.toLowerCase();
+				var mMovieName = getMovies[index].name;
+				var mMovieIsAdult = getMovies[index].name;
 
-				if(JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true){
+				if((JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true) || (mMovieIsAdult == 1 || mMovieIsAdult == true || mMovieIsAdult == "true")){
 					
 				}else{
+
+					getMovies[index].category_id = 99;
+					
+
+					if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) && ["tamil", "hindi", "tamil", "in|", "in - ","inr - ", "inr| "].some(searchString => mCategory_Name.includes(searchString))){
+						getMovieCategories[index]["category_id"] = 21;
+					}
+
+					if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) && ["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString))){
+						getMovieCategories[index]["category_id"] = 25;
+					}
+
+					if(["tamil"].some(searchString => mCategory_Name.includes(searchString)) && ["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString))){
+						getMovieCategories[index]["category_id"] = 13;
+					}
+
+					if(["nfl"].some(searchString => mCategory_Name.includes(searchString)) && ["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString))){
+						getMovieCategories[index]["category_id"] = 42;
+					}
+
+					/*
+					getChannelCategories.unshift({"category_id":"13","category_name":"IN| Tamil > Live","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"14","category_name":"IN| Tamil > News","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"15","category_name":"IN| Tamil > Movies 24/7","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"16","category_name":"IN| Tamil > Music","parent_id":0,"exclude":false, "master_category": true});
+
+					getChannelCategories.unshift({"category_id":"21","category_name":"IN| Kids > Movies","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"22","category_name":"IN| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
+					
+					getChannelCategories.unshift({"category_id":"25","category_name":"US| Kids > Movies","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"26","category_name":"US| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
+
+					getChannelCategories.unshift({"category_id":"31","category_name":"IN| Hindi > Live","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"32","category_name":"IN| Hindi > News","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"33","category_name":"IN| Hindi > Movies 24/7","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"34","category_name":"IN| Hindi > Music","parent_id":0,"exclude":false, "master_category": true});
+
+					getChannelCategories.unshift({"category_id":"41","category_name":"US| Sports > Cricket","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"42","category_name":"US| Sports > NFL","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"43","category_name":"US| Sports > NBA","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"44","category_name":"US| Sports > MLB","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"45","category_name":"US| Sports > Soccer","parent_id":0,"exclude":false, "master_category": true});
+
+					getChannelCategories.unshift({"category_id":"51","category_name":"US| News","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"52","category_name":"US| Movies","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"53","category_name":"US| Broadcast","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"54","category_name":"US| Live TV","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id":"99","category_name":"ZZ| Other","parent_id":0,"exclude":false, "master_category": true});
+
+					*/
 					filtered_getChannels.push(getChannels[index]);
 				}
 			}
@@ -275,30 +326,6 @@ async function fncGetVODCategories(xtream){
 
 		}
 		
-		getMovieCategories.unshift({"category_id":"13","category_name":"IN| Tamil > Live","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"14","category_name":"IN| Tamil > News","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"15","category_name":"IN| Tamil > Movies 24/7","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"16","category_name":"IN| Tamil > Music","parent_id":0,"exclude":false});
-
-		getMovieCategories.unshift({"category_id":"21","category_name":"IN| Kids > Movies","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"22","category_name":"IN| Kids > Series","parent_id":0,"exclude":false});
-
-		getMovieCategories.unshift({"category_id":"31","category_name":"IN| Hindi > Live","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"32","category_name":"IN| Hindi > News","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"33","category_name":"IN| Hindi > Movies 24/7","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"34","category_name":"IN| Hindi > Music","parent_id":0,"exclude":false});
-
-		getMovieCategories.unshift({"category_id":"41","category_name":"US| Sports > Cricket","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"42","category_name":"US| Sports > NFL","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"43","category_name":"US| Sports > NBA","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"44","category_name":"US| Sports > MLB","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"45","category_name":"US| Sports > Soccer","parent_id":0,"exclude":false});
-
-		getMovieCategories.unshift({"category_id":"51","category_name":"US| News","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"52","category_name":"US| Movies","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"53","category_name":"US| Broadcast","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"54","category_name":"US| Live TV","parent_id":0,"exclude":false});
-		getMovieCategories.unshift({"category_id":"55","category_name":"ZZ| Other","parent_id":0,"exclude":false});
 
 		
 		return {JSON_MovieCategories: JSON_MovieCategories, getMovieCategories: getMovieCategories};
@@ -310,10 +337,42 @@ async function fncGetLiveCategories(xtream){
 	const getChannelCategories = await xtream.getChannelCategories();
 	var JSON_ChannelCategories = {};
 
+		getChannelCategories.unshift({"category_id":"13","category_name":"IN| Tamil > Live","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"14","category_name":"IN| Tamil > News","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"15","category_name":"IN| Tamil > Movies 24/7","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"16","category_name":"IN| Tamil > Music","parent_id":0,"exclude":false, "master_category": true});
+
+		getChannelCategories.unshift({"category_id":"21","category_name":"IN| Kids > Movies","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"22","category_name":"IN| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
+
+		getChannelCategories.unshift({"category_id":"31","category_name":"IN| Hindi > Live","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"32","category_name":"IN| Hindi > News","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"33","category_name":"IN| Hindi > Movies 24/7","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"34","category_name":"IN| Hindi > Music","parent_id":0,"exclude":false, "master_category": true});
+
+		getChannelCategories.unshift({"category_id":"41","category_name":"US| Sports > Cricket","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"42","category_name":"US| Sports > NFL","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"43","category_name":"US| Sports > NBA","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"44","category_name":"US| Sports > MLB","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"45","category_name":"US| Sports > Soccer","parent_id":0,"exclude":false, "master_category": true});
+
+		getChannelCategories.unshift({"category_id":"51","category_name":"US| News","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"52","category_name":"US| Movies","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"53","category_name":"US| Broadcast","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id":"54","category_name":"US| Live TV","parent_id":0,"exclude":false, "master_category": true});
+		
+		getChannelCategories.unshift({"category_id":"99","category_name":"ZZ| Other","parent_id":0,"exclude":false, "master_category": true});
+
+	
 		for(var index in getChannelCategories){
 			getChannelCategories[index]["exclude"] = false;
 
 			var mCategory = getChannelCategories[index].category_name;
+			
+			if(mCategory.master_category == true){
+				JSON_ChannelCategories[getChannelCategories[index]["category_id"]] = getChannelCategories[index];
+				continue;
+			}
 			
 			if(arabicCharacters.test(mCategory)){
 				getChannelCategories[index]["exclude"] = true;
@@ -358,6 +417,8 @@ async function fncGetLiveCategories(xtream){
 
 		}
 		
+		
+
 		return {JSON_ChannelCategories: JSON_ChannelCategories, getChannelCategories: getChannelCategories};
 
 }
