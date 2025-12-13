@@ -173,8 +173,10 @@ app.get("/player_api.php", async function(req, res){
 						getChannels[index]["category_id"] = 999944;
 					}else if( ["soccer"].some(searchString => mCategory_Name.includes(searchString)) ){
 						getChannels[index]["category_id"] = 999945;
-					}else if( ["sports", "golf", "boxing", "mma"].some(searchString => mCategory_Name.includes(searchString)) ){
+					}else if( ["espn"].some(searchString => mCategory_Name.includes(searchString)) || ["espn"].some(searchString => mChannelName.includes(searchString)) ){
 						getChannels[index]["category_id"] = 999946;
+					}else if( ["sports", "golf", "boxing", "mma"].some(searchString => mCategory_Name.includes(searchString)) ){
+						getChannels[index]["category_id"] = 999950;
 					}else if(["tamil", "hindi", "bollywood", "in|", "in - ","inr - ", "inr| "].some(searchString => mCategory_Name.includes(searchString)) ){
 					
 						if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) ){
@@ -223,14 +225,20 @@ app.get("/player_api.php", async function(req, res){
 
 					}else if(["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString)) ){
 
-						if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) ){
+						if(["sling", "tubi", "roku", "rk:", "go:", "city:"].some(searchString => mCategory_Name.includes(searchString)) || ["sling", "tubi", "roku", "rk:", "go:", "city:"].some(searchString => mChannelName.includes(searchString)) ){
+							//Exclude
+						}else if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) ){
 							getChannels[index]["category_id"] = 999926;
 							
 							if(["movie"].some(searchString => mCategory_Name.includes(searchString)) || ["movie"].some(searchString => mChannelName.includes(searchString))){
 								getChannels[index]["category_id"] = 999925;
 							}
 						}else if(["news"].some(searchString => mChannelName.includes(searchString)) || ["news"].some(searchString => mCategory_Name.includes(searchString))){
-							getChannels[index]["category_id"] = 999951;
+							if(["prime:", "netflix:", "spectrum"].some(searchString => mCategory_Name.includes(searchString)) || ["prime:", "netflix:"].some(searchString => mChannelName.includes(searchString)) ){
+								//Exclude
+							}else{
+								getChannels[index]["category_id"] = 999951;
+							}
 						}else if(["documentary"].some(searchString => mChannelName.includes(searchString)) || ["documentary"].some(searchString => mCategory_Name.includes(searchString))){
 							getChannels[index]["category_id"] = 999955;
 						}else if(["movies"].some(searchString => mChannelName.includes(searchString)) || ["movies"].some(searchString => mCategory_Name.includes(searchString))){
@@ -275,7 +283,8 @@ app.get("/player_api.php", async function(req, res){
 					getChannelCategories.unshift({"category_id": 999943,"category_name":"US| Sports > NBA","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999944,"category_name":"US| Sports > MLB","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999945,"category_name":"US| Sports > Soccer","parent_id":0,"exclude":false, "master_category": true});
-					getChannelCategories.unshift({"category_id": 999945,"category_name":"US| Sports > Other","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id": 999946,"category_name":"US| Sports > ESPN","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id": 999950,"category_name":"US| Sports > Other","parent_id":0,"exclude":false, "master_category": true});
 
 					getChannelCategories.unshift({"category_id": 999951,"category_name":"US| News","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999952,"category_name":"US| Movies","parent_id":0,"exclude":false, "master_category": true});
@@ -452,7 +461,8 @@ async function fncGetLiveCategories(xtream){
 		getChannelCategories.unshift({"category_id": 999943,"category_name":"US| Sports > NBA","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999944,"category_name":"US| Sports > MLB","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999945,"category_name":"US| Sports > Soccer","parent_id":0,"exclude":false, "master_category": true});
-		getChannelCategories.unshift({"category_id": 999946,"category_name":"US| Sports > Other","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id": 999946,"category_name":"US| Sports > ESPN","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id": 999950,"category_name":"US| Sports > Other","parent_id":0,"exclude":false, "master_category": true});
 
 		getChannelCategories.unshift({"category_id": 999951,"category_name":"US| News","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999952,"category_name":"US| Movies","parent_id":0,"exclude":false, "master_category": true});
