@@ -157,8 +157,11 @@ app.get("/player_api.php", async function(req, res){
 				var mChannelName = getChannels[index].name.toLowerCase();
 				var mChannelIsAdult = getChannels[index].is_adult;
 
-				if((JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true) || (mChannelIsAdult == 1 || mChannelIsAdult == true || mChannelIsAdult == "true")){
-					
+				if((JSON_ChannelCategories[mCategory_ID] !== undefined && JSON_ChannelCategories[mCategory_ID].exclude == true) || 
+					(mChannelIsAdult == 1 || mChannelIsAdult == true || mChannelIsAdult == "true") ||
+					mChannelName.startsWith("##") == true
+				){
+					//Exclude
 				}else{
 
 					getChannels[index]["category_id"] = 999999;
