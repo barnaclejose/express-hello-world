@@ -193,9 +193,9 @@ app.get("/player_api.php", async function(req, res){
 								getChannels[index]["category_id"] = 999914;
 							}else if(["movie", "24/7", "24x7"].some(searchString => mCategory_Name.includes(searchString)) ){ //***mCategory_Name NOT mChannelName
 								getChannels[index]["category_id"] = 999916;
-							}else if(["movie"].some(searchString => mChannelName.includes(searchString)) ){
+							}else if(["movie", "thirai"].some(searchString => mChannelName.includes(searchString)) ){
 								getChannels[index]["category_id"] = 999915;
-							}else if(["music", "musix"].some(searchString => mChannelName.includes(searchString)) ){
+							}else if(["music", "musix", "songs", "isai", "tunes"].some(searchString => mChannelName.includes(searchString)) ){
 								getChannels[index]["category_id"] = 999917;
 							}else{
 								getChannels[index]["category_id"] = 999913;
@@ -224,9 +224,22 @@ app.get("/player_api.php", async function(req, res){
 					}else if(["english", "usa", "us|", "us - "].some(searchString => mCategory_Name.includes(searchString)) ){
 
 						if(["kid", "cartoon"].some(searchString => mCategory_Name.includes(searchString)) ){
-							getChannels[index]["category_id"] = 999925;
+							getChannels[index]["category_id"] = 999926;
+							
+							if(["movie"].some(searchString => mCategory_Name.includes(searchString)) || ["movie"].some(searchString => mChannelName.includes(searchString))){
+								getChannels[index]["category_id"] = 999925;
+							}
+						}else if(["news"].some(searchString => mChannelName.includes(searchString)) || ["news"].some(searchString => mCategory_Name.includes(searchString))){
+							getChannels[index]["category_id"] = 999951;
+						}else if(["documentary"].some(searchString => mChannelName.includes(searchString)) || ["documentary"].some(searchString => mCategory_Name.includes(searchString))){
+							getChannels[index]["category_id"] = 999955;
+						}else if(["movies"].some(searchString => mChannelName.includes(searchString)) || ["movies"].some(searchString => mCategory_Name.includes(searchString))){
+							getChannels[index]["category_id"] = 999952;
+						}else if(["abc", "nbc", "fox"].some(searchString => mChannelName.includes(searchString)) || ["abc", "nbc", "fox"].some(searchString => mCategory_Name.includes(searchString))){
+							getChannels[index]["category_id"] = 999953;
+						}else{
+							getChannels[index]["category_id"] = 999954;
 						}
-
 					}
 
 					
@@ -268,6 +281,7 @@ app.get("/player_api.php", async function(req, res){
 					getChannelCategories.unshift({"category_id": 999952,"category_name":"US| Movies","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999953,"category_name":"US| Broadcast","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999954,"category_name":"US| Live TV","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id": 999955,"category_name":"US| Documentary","parent_id":0,"exclude":false, "master_category": true});
 					
 					getChannelCategories.unshift({"category_id": 999999,"category_name":"WW| Other","parent_id":0,"exclude":false, "master_category": true});
 
@@ -387,7 +401,7 @@ async function fncGetVODCategories(xtream){
 				getMovieCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "porn", "xxx", "adult", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "religious", "relax", "christmas", "porn", "xxx", "adult", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
 				getMovieCategories[index]["exclude"] = true;
 			}
 
@@ -444,7 +458,8 @@ async function fncGetLiveCategories(xtream){
 		getChannelCategories.unshift({"category_id": 999952,"category_name":"US| Movies","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999953,"category_name":"US| Broadcast","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999954,"category_name":"US| Live TV","parent_id":0,"exclude":false, "master_category": true});
-		
+		getChannelCategories.unshift({"category_id": 999955,"category_name":"US| Documentary","parent_id":0,"exclude":false, "master_category": true});
+
 		getChannelCategories.unshift({"category_id": 999999,"category_name":"WW| Other","parent_id":0,"exclude":false, "master_category": true});
 
 	
@@ -493,7 +508,7 @@ async function fncGetLiveCategories(xtream){
 				getChannelCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "porn", "xxx", "adult", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "religious", "relax", "christmas", "porn", "xxx", "adult", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands"].some(searchString => mCategory.includes(searchString))){
 				getChannelCategories[index]["exclude"] = true;
 			}
 
@@ -552,7 +567,7 @@ async function fncGetSeriesCategories(xtream){
 				getShowCategories[index]["exclude"] = true;
 			}
 
-			if(["viaplay", "porn", "xxx", "adult", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands", "russain"].some(searchString => mCategory.includes(searchString))){
+			if(["viaplay", "religious", "relax", "christmas", "porn", "xxx", "adult", "discovery", "videoland", "pt/br", "afr", "exyu", "somalia", "canal",  "norsk", "suomi", "íslands", "russain"].some(searchString => mCategory.includes(searchString))){
 				getShowCategories[index]["exclude"] = true;
 			}
 
