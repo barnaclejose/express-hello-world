@@ -5,8 +5,9 @@ const app = express();
 const port = process.env.PORT || 3001;
 const arabicCharacters = /[\u0600-\u06FF]/;
 
+//Key (unique account identifier) comes from user agent. or lookup the account with username field (not unique in scale).
 const gApiKeys = {
-	"020a99bbf5" : {server: "http://cf.business-cdn.me", username: "020a99bbf5", password: "aaa38a3ab0"},
+	"020a99bbf5" : {server: "http://cf.one-cdn24.me", username: "020a99bbf5", password: "aaa38a3ab0"},
 };
 		
 
