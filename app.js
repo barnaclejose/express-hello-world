@@ -225,6 +225,8 @@ app.get("/player_api.php", async function(req, res){
 
 					}
 
+					
+					getChannels[index].name = getChannels[index].name.replace(/US:/gi, "").replace(/IN:/gi, "").replace(/INDIA:/gi, "").replace(/TAMIL:/gi, "").replace(/HINDI:/gi, "").replace(/SPORTS:/gi, "").replace(/IN-PREM:/gi, "").trim();
 
 
 
@@ -261,7 +263,7 @@ app.get("/player_api.php", async function(req, res){
 					getChannelCategories.unshift({"category_id": 999953,"category_name":"US| Broadcast","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999954,"category_name":"US| Live TV","parent_id":0,"exclude":false, "master_category": true});
 					
-					getChannelCategories.unshift({"category_id": 999999,"category_name":"ZZ| Other","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id": 999999,"category_name":"WW| Other","parent_id":0,"exclude":false, "master_category": true});
 
 					*/
 					
@@ -435,7 +437,7 @@ async function fncGetLiveCategories(xtream){
 		getChannelCategories.unshift({"category_id": 999953,"category_name":"US| Broadcast","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999954,"category_name":"US| Live TV","parent_id":0,"exclude":false, "master_category": true});
 		
-		getChannelCategories.unshift({"category_id": 999999,"category_name":"ZZ| Other","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id": 999999,"category_name":"WW| Other","parent_id":0,"exclude":false, "master_category": true});
 
 	
 		for(var index in getChannelCategories){
