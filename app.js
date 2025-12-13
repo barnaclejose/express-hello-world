@@ -237,8 +237,17 @@ app.get("/player_api.php", async function(req, res){
 								getChannels[index].name = getChannels[index].name.replace(/24\/7:/gi, "").trim();
 							}
 						}else if(["news"].some(searchString => mChannelName.includes(searchString)) || ["news"].some(searchString => mCategory_Name.includes(searchString))){
-							if(["prime:", "netflix:", "spectrum"].some(searchString => mCategory_Name.includes(searchString)) || ["prime:", "netflix:"].some(searchString => mChannelName.includes(searchString)) ){
+							if(["prime:", "netflix:", "spectrum"].some(searchString => mCategory_Name.includes(searchString)) || ["prime:", "netflix:", "spectrum"].some(searchString => mChannelName.includes(searchString)) ){
 								//Exclude
+							}else if(mChannelName.startsWith("english:")){
+								//Exclude
+							}else if(["abc", "nbc", "cbs", "fox"].some(searchString => mChannelName.includes(searchString)) ){
+								if(mChannelName.replace(new RegExp('\\b(' + ["abc", "nbc", "cbs", "fox", "hd", "news"].join("|") + ')\\b', 'gi'), ' ').replace(/\s{2,}/g, ' ').trim() == ""){
+									//Great its just these main news not local markets
+									getChannels[index]["category_id"] = 999951;
+								}else{
+									//Exclude
+								}
 							}else{
 								getChannels[index]["category_id"] = 999951;
 							}
