@@ -448,6 +448,11 @@ async function fncGetLiveCategories(xtream){
 				continue;
 			}
 			
+			//remove clashes with new master category
+			if(JSON_ChannelCategories[getChannelCategories[index]["category_id"]] !== undefined && JSON_ChannelCategories[getChannelCategories[index]["category_id"]].master_category == true){
+				getChannelCategories[index]["category_id"] = "zzzz" + getChannelCategories[index]["category_id"];
+			}
+			
 			if(arabicCharacters.test(mCategory)){
 				getChannelCategories[index]["exclude"] = true;
 			}
