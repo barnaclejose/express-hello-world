@@ -232,6 +232,9 @@ app.get("/player_api.php", async function(req, res){
 							
 							if(["movie"].some(searchString => mCategory_Name.includes(searchString)) || ["movie"].some(searchString => mChannelName.includes(searchString))){
 								getChannels[index]["category_id"] = 999925;
+							}else if(["24/7"].some(searchString => mCategory_Name.includes(searchString)) || ["24/7"].some(searchString => mChannelName.includes(searchString))){
+								getChannels[index]["category_id"] = 999925;
+								getChannels[index].name = getChannels[index].name.replace(/24\/7:/gi, "").trim();
 							}
 						}else if(["news"].some(searchString => mChannelName.includes(searchString)) || ["news"].some(searchString => mCategory_Name.includes(searchString))){
 							if(["prime:", "netflix:", "spectrum"].some(searchString => mCategory_Name.includes(searchString)) || ["prime:", "netflix:"].some(searchString => mChannelName.includes(searchString)) ){
@@ -267,7 +270,8 @@ app.get("/player_api.php", async function(req, res){
 					getChannelCategories.unshift({"category_id": 999922,"category_name":"IN| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
 					
 					getChannelCategories.unshift({"category_id": 999925,"category_name":"US| Kids > Movies","parent_id":0,"exclude":false, "master_category": true});
-					getChannelCategories.unshift({"category_id": 999926,"category_name":"US| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id": 999926,"category_name":"US| Kids > Live TV","parent_id":0,"exclude":false, "master_category": true});
+					getChannelCategories.unshift({"category_id": 999927,"category_name":"US| Kids > Series 24/7","parent_id":0,"exclude":false, "master_category": true});
 
 					getChannelCategories.unshift({"category_id": 999931,"category_name":"IN| Hindi > Other","parent_id":0,"exclude":false, "master_category": true});
 					getChannelCategories.unshift({"category_id": 999933,"category_name":"IN| Hindi > Live TV","parent_id":0,"exclude":false, "master_category": true});
@@ -445,7 +449,8 @@ async function fncGetLiveCategories(xtream){
 		getChannelCategories.unshift({"category_id": 999922,"category_name":"IN| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
 		
 		getChannelCategories.unshift({"category_id": 999925,"category_name":"US| Kids > Movies","parent_id":0,"exclude":false, "master_category": true});
-		getChannelCategories.unshift({"category_id": 999926,"category_name":"US| Kids > Series","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id": 999926,"category_name":"US| Kids > Live TV","parent_id":0,"exclude":false, "master_category": true});
+		getChannelCategories.unshift({"category_id": 999927,"category_name":"US| Kids > Series 24/7","parent_id":0,"exclude":false, "master_category": true});
 
 		getChannelCategories.unshift({"category_id": 999931,"category_name":"IN| Hindi > Other","parent_id":0,"exclude":false, "master_category": true});
 		getChannelCategories.unshift({"category_id": 999933,"category_name":"IN| Hindi > Live TV","parent_id":0,"exclude":false, "master_category": true});
