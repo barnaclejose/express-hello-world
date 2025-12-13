@@ -7,7 +7,7 @@ const arabicCharacters = /[\u0600-\u06FF]/;
 
 //Key (unique account identifier) comes from user agent. or lookup the account with username field (not unique in scale).
 const gApiKeys = {
-	"020a99bbf5" : {server: "http://cf.one-cdn24.me", username: "020a99bbf5", password: "aaa38a3ab0"},
+	"TIGER1" : {server: "http://cf.one-cdn24.me", username: "020a99bbf5", password: "aaa38a3ab0"},
 };
 		
 
@@ -205,7 +205,7 @@ app.get("/player_api.php", async function(req, res){
 
 						}
 
-						if(["hindi", "bollywood"].some(searchString => mCategory_Name.includes(searchString)) ){
+						if(["hindi", "bollywood", "india"].some(searchString => mCategory_Name.includes(searchString)) ){
 
 							getChannels[index]["category_id"] = 999931;
 							
@@ -237,7 +237,7 @@ app.get("/player_api.php", async function(req, res){
 								getChannels[index].name = getChannels[index].name.replace(/24\/7:/gi, "").trim();
 							}
 						}else if(["news"].some(searchString => mChannelName.includes(searchString)) || ["news"].some(searchString => mCategory_Name.includes(searchString))){
-							if(["prime:", "netflix:", "spectrum"].some(searchString => mCategory_Name.includes(searchString)) || ["prime:", "netflix:", "spectrum"].some(searchString => mChannelName.includes(searchString)) ){
+							if(["prime:", "netflix:", "spectrum", "peacock", "telemundo"].some(searchString => mCategory_Name.includes(searchString)) || ["prime:", "netflix:", "spectrum", "peacock", "telemundo"].some(searchString => mChannelName.includes(searchString)) ){
 								//Exclude
 							}else if(mChannelName.startsWith("english:")){
 								//Exclude
@@ -257,7 +257,12 @@ app.get("/player_api.php", async function(req, res){
 							getChannels[index]["category_id"] = 999952;
 						}else if(["abc", "nbc", "fox"].some(searchString => mChannelName.includes(searchString)) || ["abc", "nbc", "fox"].some(searchString => mCategory_Name.includes(searchString))){
 							getChannels[index]["category_id"] = 999953;
-						}else{
+						}else if(
+							mChannelName.startsWith("english:") == false &&
+							["prime:", "netflix:", "spectrum", "peacock", "telemundo", "oneplay", "paramount", "hulu", "disney+", "hbo max", "cm hollywood", "cinemania", "disney", "24/7", "sports", "live", "ppv", "replay"].some(searchString => mCategory_Name.includes(searchString)) == false && 
+							["prime:", "netflix:", "spectrum", "peacock", "telemundo", "oneplay", "paramount", "hulu", "disney+", "hbo max", "cm hollywood", "cinemania", "disney", "24/7", "sports", "live", "ppv", "replay"].some(searchString => mChannelName.includes(searchString)) == false 
+							){
+							
 							getChannels[index]["category_id"] = 999954;
 						}
 					}
